@@ -1,3 +1,5 @@
+<!--# Name : Surya Narayanan Nadhamuni Suresh
+# UTA ID : 1001877873 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +7,98 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css')}}">
-    <title>Earthquake3 application</title>
+    <title>Earthquake4 application</title>
+    <!-- https://developers.google.com/chart/interactive/docs/quick_start-->
+     <!--Load the AJAX API-->
+     
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+     <script type="text/javascript">
+
+    // below line used for loading the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // setting a callback to run once the visualization API is loaded
+    google.charts.setOnLoadCallback(graphChart);
+    
+     // Callback that creates and populates the table
+    function graphChart() {
+      // Create the table
+      var data = new google.visualization.arrayToDataTable([
+          ['Magnitude_range','Number of occurences'],
+          {% for value in data2 %}
+                {% if value[1] is string %}
+                    ['{{value[0]}}','{{value[1]}}'],
+                {% else %}
+                    ['{{value[0]}}',{{value[1]}}],
+                {% endif %}
+            {% endfor %}
+        ]);
+    // Set chart options
+    var options = {'title':'To group the earthquakes by mag scale',
+                        is3D: true,
+                       'width':800,
+                       'height':600};
+    // Instantiate and draw the chart
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+      }
+    </script>
+
+
+ 
+
+
+
 </head>
 <body>
-    <h1>This is the earthquake application</h1>
+    <h1>This is the graphical representation of earthquake application</h1>
     <h2>Surya Narayanan N S</h2>
     <h2>UTA ID : 1001877873</h2>
+
+
+    <p><b>To group the earthquakes by mag scale for past N days</b></p>
+    <form action="/groupby" method="post">
+        <table>
+            <tr>
+                <td><label for ="days">N days </label></td>
+                <td><input type="text" id="days" name="days"></td>
+                <td><input type="submit" value="SEARCH"></td>
+            </tr>
+        </table>
+
+    </form>
+
+
+
+{% if data2 %}
+    <table border=1>
+        <tr>
+            <th>Magnitude_range</th>
+            <th>Number of occurences</th>
+        </tr>
+    {% for value in data2 %}
+        <tr>
+            <td>{{ value[0] }}</td>
+            <td>{{ value[1] }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+     <!--Div that will hold the pie chart-->
+     <div id="piechart"></div>
+
+{% else %}
+    {% with msg = get_flashed_messages() %}
+    {% if msg %}
+        {% for info in msg %}
+            {{ info }}
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+{% endif %}
+
+
+
     
 </body>
 </html>
