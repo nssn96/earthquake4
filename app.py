@@ -56,21 +56,28 @@ def dbConnect():
     return conn
 
 def groupByMag(fields):
-    query = "Select val from tab"
+    query = "Select max(val),min(val) from tab"
+    query2 = "select val from tab"
     dbConnect()
     cursor = conn.cursor()
     cursor.execute(query)
     res = cursor.fetchall()
+    cursor.execute(query2)
+    res2 = cursor.fetchall()
     print(query)
+    print(res)
+    for i in res:
+        MAX = i[0]
+        MIN = i[1]
     
-    split = (int(fields['high'])-int(fields['low']))//int(fields['N'])
+    split = (int(MAX)-int(MIN))//int(fields['N'])
     temp=[]
     l = 0
     h=split
     
     for i in range(int(fields['N'])):
         count=0
-        for j in res:
+        for j in res2:
             for k in j:
 
                 if k>l and k<h:
