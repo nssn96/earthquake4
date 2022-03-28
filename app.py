@@ -91,15 +91,20 @@ def groupByMag(fields):
     return res
 
 def recentN(fields):
-    query = "Select mag,depthError from earthquake order by time desc LIMIT 0,"+fields['days']
+    query = "Select A,B,val from tab where val>"+fields['low']+ " and val< "+fields['high']
     dbConnect()
     cursor = conn.cursor()
     cursor.execute(query)
     res = cursor.fetchall()
     print(query)
-    print(res)
+    temp=[]
+    for i in res:
+        mul=(i[0]*i[1])
+        temp.append([i[2],mul])
+
+    print(temp)
     conn.close()
-    return res
+    return temp
 
 
 @app.route('/groupby',methods=['POST','GET'])
