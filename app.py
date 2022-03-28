@@ -43,12 +43,28 @@ def groupByMag(fields):
     query+="where date(time)>=date(curdate()-"
     query+=fields['days']+")"
     query+=" ) t group by t.new"
+    #query = "Select time,mag from earthquake" 
+    # LIMIT 0,"+fields['days']
     dbConnect()
     cursor = conn.cursor()
     cursor.execute(query)
     res = cursor.fetchall()
     print(query)
-    print(res)
+
+    # dayC=0
+    # nightC=0
+    # temp=[]
+    # for i in res:
+    #     mytime= i[0].time()
+    #     #print(mytime.hour)
+    #     if mytime.hour < 6 or mytime.hour > 18:
+    #         nightC=nightC+1
+    #     else:
+    #         dayC=dayC+1
+    # temp.append(['AM',dayC])
+    # temp.append(['PM',nightC])
+    # print(temp)
+
     conn.close()
     return res
 
