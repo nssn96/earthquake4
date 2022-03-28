@@ -1,0 +1,19 @@
+
+References used for assignment 4
+
+https://developers.google.com/chart/interactive/docs/quick_start
+
+
+Dynamic charts implementation using flask 
+https://www.youtube.com/watch?v=kt80L6f9dj8
+
+scatter chart 
+https://developers.google.com/chart/interactive/docs/gallery/scatterchart
+
+bar chart
+https://developers.google.com/chart/interactive/docs/gallery/columnchart
+
+for time conversion
+1) https://stackoverflow.com/questions/51625018/to-find-whether-its-day-or-night-using-time-module-in-python#:~:text=For%20something%20more%20airy-fairy%20%28like%20day%20and%20night%29%2C,%28%27It%20is%20night-time%27%29%20else%3A%20print%20%28%27It%20is%20day-time%27%29
+
+2) https://www.geeksforgeeks.org/extract-time-from-datetime-in-python/
