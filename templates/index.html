@@ -28,7 +28,7 @@
       // Create the table
       var data = new google.visualization.arrayToDataTable([
           ['Magnitude_range','Number of occurences'],
-          {% for value in data2 %}
+          {% for value in data1 %}
                 {% if value[1] is string %}
                     ['{{value[0]}}','{{value[1]}}'],
                 {% else %}
@@ -46,15 +46,17 @@
         chart.draw(data, options);
       }
     </script>
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 <script type="text/javascript">
+
     google.charts.load("current", {packages:['corechart']});
     google.charts.setOnLoadCallback(barChart);
-    function barChart() {
+
+function barChart() {
         // Create the table
         var data = new google.visualization.arrayToDataTable([
           ['Magnitude_range','Number of occurences'],
-          {% for value in data2 %}
+          {% for value in data1 %}
                 {% if value[1] is string %}
                     ['{{value[0]}}','{{value[1]}}'],
                 {% else %}
@@ -76,6 +78,36 @@
       chart.draw(data, options);
   }
   </script>
+
+  <script type="text/javascript">
+
+    google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(scatterChart);
+
+      function scatterChart() {
+        var data = google.visualization.arrayToDataTable([
+        ['Magnitude','Depth'],
+          {% for value in data2 %}
+                {% if value[1] is string %}
+                    ['{{value[0]}}','{{value[1]}}'],
+                {% else %}
+                    ['{{value[0]}}',{{value[1]}}],
+                {% endif %}
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Magnitude vs. depth comparison',
+          hAxis: {title: 'Magnitude'},
+          vAxis: {title: 'Depth'},
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('scatterchart'));
+
+        chart.draw(data, options);
+      }
+     </script>
 
 
 
@@ -103,15 +135,28 @@
     </form>
     </br></br>
 
+    <p><b>magnitude against depth plot for N recent quakes</b></p>
+    <form action="/recent" method="post">
+        <table>
+            <tr>
+                <td><label for ="days">N days </label></td>
+                <td><input type="text" id="days" name="days"></td>
+                <td><input type="submit" value="SEARCH"></td>
+            </tr>
+        </table>
+
+    </form>
+    </br></br>
 
 
-{% if data2 %}
+
+{% if data1 %}
     <table border=1>
         <tr>
             <th>Magnitude_range</th>
             <th>Number of occurences</th>
         </tr>
-    {% for value in data2 %}
+    {% for value in data1 %}
         <tr>
             <td>{{ value[0] }}</td>
             <td>{{ value[1] }}</td>
@@ -124,6 +169,34 @@
     </br>
      <!--Div that will hold the pie chart-->
      <div id="barchart"></div>
+
+{% else %}
+    {% with msg = get_flashed_messages() %}
+    {% if msg %}
+        {% for info in msg %}
+            {{ info }}
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+{% endif %}
+
+
+{% if data2 %}
+    <table border=1>
+        <tr>
+            <th>Magnitude</th>
+            <th>depth</th>
+        </tr>
+    {% for value in data2 %}
+        <tr>
+            <td>{{ value[0] }}</td>
+            <td>{{ value[1] }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+     <!--Div that will hold the pie chart-->
+     <div id="scatterchart"></div>
 
 {% else %}
     {% with msg = get_flashed_messages() %}

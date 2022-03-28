@@ -52,6 +52,17 @@ def groupByMag(fields):
     conn.close()
     return res
 
+def recentN(fields):
+    query = "Select mag,depthError from earthquake order by time desc LIMIT 0,"+fields['days']
+    dbConnect()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    res = cursor.fetchall()
+    print(query)
+    print(res)
+    conn.close()
+    return res
+
 
 @app.route('/groupby',methods=['POST','GET'])
 def groupBy():
@@ -72,8 +83,29 @@ def groupBy():
             flash('Please enter values in the field')
 
         
-    return render_template('index.html',data2=result)
+    return render_template('index.html',data1=result)
 
+
+@app.route('/recent',methods=['POST','GET'])
+def recent():
+    if request.method=='POST':
+        dic={}
+        for key,value in request.form.items():
+            if value!='':
+                dic[key]=value
+
+        if dic:
+            result=recentN(dic)
+            if result==[]:
+                result=[]
+                flash('No records of earthquake for above mentioned days')
+
+        else:
+            result=[]
+            flash('Please enter values in the field')
+
+        
+    return render_template('index.html',data2=result)
 
 
 if __name__ == "__main__":
