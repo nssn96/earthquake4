@@ -85,22 +85,24 @@ function barChart() {
       google.charts.setOnLoadCallback(scatterChart);
 
       function scatterChart() {
-        var data = google.visualization.arrayToDataTable([
-        ['Magnitude','Depth'],
-          {% for value in data2 %}
-                {% if value[1] is string %}
-                    ['{{value[0]}}','{{value[1]}}'],
-                {% else %}
-                    ['{{value[0]}}',{{value[1]}}],
-                {% endif %}
-            {% endfor %}
-        ]);
+        var data = new google.visualization.DataTable();
+        data.addColumn("number", "Magnitude");
+        data.addColumn("number", "Depth");
+
+        
+        ("{% for value in data2%}");
+        data.addRows([[parseFloat("{{value[0]}}"), parseFloat("{{value[1]}}")]]);
+        ("{% endfor %}");
+
 
         var options = {
           title: 'Magnitude vs. depth comparison',
-          hAxis: {title: 'Magnitude'},
-          vAxis: {title: 'Depth'},
-          legend: 'none'
+          hAxis: {title: 'Magnitude' ,minValue: 0, maxValue: 7},
+          vAxis: {title: 'Depth',minValue: 0, maxValue: 15},
+          legend: 'none',
+          width: 1200,
+          height: 700
+
         };
 
         var chart = new google.visualization.ScatterChart(document.getElementById('scatterchart'));
@@ -167,7 +169,7 @@ function barChart() {
      <!--Div that will hold the pie chart-->
      <div id="piechart"></div>
     </br>
-     <!--Div that will hold the pie chart-->
+     <!--Div that will hold the bar chart-->
      <div id="barchart"></div>
 
 {% else %}
