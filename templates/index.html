@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css')}}">
     <title>Earthquake4 application</title>
-    <!-- https://developers.google.com/chart/interactive/docs/quick_start-->
-     <!--Load the AJAX API-->
+    <!-- Reference-- https://developers.google.com/chart/interactive/docs/quick_start-->
+     
+ 
+    <!--Load the AJAX API-->
      
      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script type="text/javascript">
@@ -17,11 +19,12 @@
     // below line used for loading the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // setting a callback to run once the visualization API is loaded
-    google.charts.setOnLoadCallback(graphChart);
+    google.charts.setOnLoadCallback(pieChart);
     
      // Callback that creates and populates the table
-    function graphChart() {
+    function pieChart() {
       // Create the table
       var data = new google.visualization.arrayToDataTable([
           ['Magnitude_range','Number of occurences'],
@@ -43,6 +46,37 @@
         chart.draw(data, options);
       }
     </script>
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(barChart);
+    function barChart() {
+        // Create the table
+        var data = new google.visualization.arrayToDataTable([
+          ['Magnitude_range','Number of occurences'],
+          {% for value in data2 %}
+                {% if value[1] is string %}
+                    ['{{value[0]}}','{{value[1]}}'],
+                {% else %}
+                    ['{{value[0]}}',{{value[1]}}],
+                {% endif %}
+            {% endfor %}
+        ]);
+
+        var options = {
+        title: "To group the earthquakes by mag scale",
+        width: 800,
+        height: 600,
+        hAxis : {  title: 'Magnitude_range' },
+        vAxis : {  title: 'Number of occurences' },
+        bar: {groupWidth: "60%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("barchart"));
+      chart.draw(data, options);
+  }
+  </script>
+
 
 
  
@@ -67,6 +101,7 @@
         </table>
 
     </form>
+    </br></br>
 
 
 
@@ -86,6 +121,9 @@
 
      <!--Div that will hold the pie chart-->
      <div id="piechart"></div>
+    </br>
+     <!--Div that will hold the pie chart-->
+     <div id="barchart"></div>
 
 {% else %}
     {% with msg = get_flashed_messages() %}
