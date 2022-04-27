@@ -56,41 +56,23 @@ def dbConnect():
     return conn
 
 def groupByMag(fields):
-    query = "Select max(val),min(val) from tab"
-    query2 = "select val from tab"
+    query = "select t.new as 'mag_range', count(*) as 'number_of_occurences' from ( "
+    query+="select case when mag>=1 and mag<2 then '1-2' "
+    query+="when mag>=2 and mag<3 then '2-3' when mag>=3 and mag<4 then '3-4' "
+    query+="when mag>=4 and mag<5 then '4-5' when mag>=5 and mag<6 then '5-6' "
+    query+="when mag>=6 and mag<7 then '6-7' else 'other(negatives)' end as new "
+    query+="from earthquake "
+    query+="where date(time)>=date(curdate()-"
+    query+=fields['days']+")"
+    query+=" ) t group by t.new"
+    #query = "Select time,mag from earthquake" 
+    # LIMIT 0,"+fields['days']
     dbConnect()
     cursor = conn.cursor()
     cursor.execute(query)
     res = cursor.fetchall()
-    cursor.execute(query2)
-    res2 = cursor.fetchall()
     print(query)
-    print(res)
-    for i in res:
-        MAX = i[0]
-        MIN = i[1]
-    
-    split = (int(MAX)-int(MIN))//int(fields['N'])
-    temp=[]
-    l = 0
-    h=split
-    
-    for i in range(int(fields['N'])):
-        count=0
-        for j in res2:
-            for k in j:
 
-                if k>l and k<h:
-                    count=count+1
-        l=l+split
-        h=h+split
-        temp.append([i+1,count])
-    
-    print(temp)
-
-
-    conn.close()
-    return temp
     # dayC=0
     # nightC=0
     # temp=[]
@@ -105,35 +87,19 @@ def groupByMag(fields):
     # temp.append(['PM',nightC])
     # print(temp)
 
+    conn.close()
+    return res
+
 def recentN(fields):
-    query = "Select val from tab"
+    query = "Select mag,depthError from earthquake order by time desc LIMIT 0,"+fields['days']
     dbConnect()
     cursor = conn.cursor()
     cursor.execute(query)
     res = cursor.fetchall()
     print(query)
-    
-    split = (int(fields['high'])-int(fields['low']))//int(fields['N'])
-    temp=[]
-    l = 0
-    h=split
-    
-    for i in range(int(fields['N'])):
-        count=0
-        for j in res:
-            for k in j:
-
-                if k>l and k<h:
-                    count=count+1
-        l=l+split
-        h=h+split
-        temp.append([i+1,count])
-    
-    print(temp)
-
-
+    print(res)
     conn.close()
-    return temp
+    return res
 
 
 @app.route('/groupby',methods=['POST','GET'])

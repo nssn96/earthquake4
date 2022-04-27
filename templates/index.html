@@ -86,8 +86,8 @@ function barChart() {
 
       function scatterChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn("number", "val");
-        data.addColumn("number", "A*B");
+        data.addColumn("number", "Magnitude");
+        data.addColumn("number", "Depth");
 
         
         ("{% for value in data2%}");
@@ -96,9 +96,9 @@ function barChart() {
 
 
         var options = {
-          title: 'Val vs (A*B)',
-          hAxis: {title: 'Val' ,minValue: 0, maxValue: 7},
-          vAxis: {title: 'A*B',minValue: 100, maxValue: 200},
+          title: 'Magnitude vs. depth comparison',
+          hAxis: {title: 'Magnitude' ,minValue: 0, maxValue: 7},
+          vAxis: {title: 'Depth',minValue: 0, maxValue: 15},
           legend: 'none',
           width: 1200,
           height: 700
@@ -123,31 +123,26 @@ function barChart() {
     <h2>Surya Narayanan N S</h2>
     <h2>UTA ID : 1001877873</h2>
 
+
+    <p><b>To group the earthquakes by mag scale for past N days</b></p>
     <form action="/groupby" method="post">
         <table>
             <tr>
-                <td><label for ="N">N  </label></td>
-                <td><input type="text" id="N" name="N"></td>
-                
+                <td><label for ="days">N days </label></td>
+                <td><input type="text" id="days" name="days"></td>
                 <td><input type="submit" value="SEARCH"></td>
             </tr>
         </table>
 
     </form>
-
-
     </br></br>
 
+    <p><b>magnitude against depth plot for N recent quakes</b></p>
     <form action="/recent" method="post">
         <table>
             <tr>
-                <td><label for ="days">low </label></td>
-                <td><input type="text" id="low" name="low"></td>
-                <td><label for ="high">high </label></td>
-                <td><input type="text" id="high" name="high"></td>
-                <td><label for ="N">N  </label></td>
-                <td><input type="text" id="N" name="N"></td>
-                
+                <td><label for ="days">N days </label></td>
+                <td><input type="text" id="days" name="days"></td>
                 <td><input type="submit" value="SEARCH"></td>
             </tr>
         </table>
@@ -192,8 +187,8 @@ function barChart() {
 {% if data2 %}
     <table border=1>
         <tr>
-            <th>val</th>
-            <th>A*B</th>
+            <th>Magnitude</th>
+            <th>depth</th>
         </tr>
     {% for value in data2 %}
         <tr>
